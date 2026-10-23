@@ -78,11 +78,20 @@
     poster: {className:'art-photo-poster', tag:'POSTER CONCEPT', overlay:'poster'},
     graphic: {className:'art-photo-graphic', tag:'GRAPHIC DESIGN CONCEPT', overlay:'graphic'}
   };
+  const categoryPhotoRanges = {
+    flyer: [0, 10], poster: [0, 10], product: [10, 20], packaging: [20, 40],
+    visual: [80, 90], graphic: [40, 80]
+  };
+  const categoryPhotoCounts = Object.create(null);
   const makeSampleCard = (sample, index) => {
     const card = document.createElement('article');
     card.className = 'project-card extra-project-card';
     card.dataset.category = sample.category;
-    const photo = 'https://images.unsplash.com/' + photoIds[index % photoIds.length] + '?auto=format&fit=crop&w=1100&q=85';
+    const range = categoryPhotoRanges[sample.category] || [40, 80];
+    const categoryIndex = categoryPhotoCounts[sample.category] || 0;
+    categoryPhotoCounts[sample.category] = categoryIndex + 1;
+    const photoIndex = range[0] + (categoryIndex % (range[1] - range[0]));
+    const photo = 'https://images.unsplash.com/' + photoIds[photoIndex] + '?auto=format&fit=crop&w=1100&q=85';
     const direction = artDirections[sample.category] || artDirections.graphic;
     const number = String(index + 1).padStart(3,'0');
     const title = escapeText(sample.title);
